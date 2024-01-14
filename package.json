@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "connect-livereload": "^0.6.1",
+    "express": "^4.18.2",
+    "livereload": "^0.9.3",
+    "nodemon": "^3.0.2",
+    "npm-run-all": "^4.1.5",
+    "sass": "^1.69.7"
+  },
+  "scripts": {
+    "scss:build": "sass src/scss:src/public/styles",
+    "scss:watch": "sass --watch src/scss:src/public/styles",
+    "server:watch": "nodemon --watch src main.js",
+    "dev": "run-p scss:watch server:watch"
+  }
+}
