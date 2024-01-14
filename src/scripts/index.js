@@ -1,23 +1,54 @@
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
+import { HexagonMap } from './map.js';
 
-const angle = (2 * Math.PI) / 6;
-const radius = 50;
-
-function drawHexagon(x, y) {
-  ctx.beginPath();
-  for (let i = 0; i < 6; i++) {
-    ctx.lineTo(
-      x + radius * Math.cos(angle * i),
-      y + radius * Math.sin(angle * i)
-    );
+class Canvas {
+  constructor(canvasId) {
+    const canvas = document.getElementById(canvasId);
+    this.context = canvas.getContext('2d');
+    this.context.canvas.width = window.innerWidth;
+    this.context.canvas.height = window.innerHeight;
+    const radius = 50;
+    this.map = new HexagonMap({ x: 100, y: 100 }, 10, 10, radius);
+    this.background = new HexagonMap({ x: 110, y: 110 }, 10, 10, radius);
   }
-  ctx.closePath();
-  ctx.stroke();
+
+  fillShape(hexagon, color = 'red') {
+    this.context.beginPath();
+    for (let i = 0; i < hexagon.perimeter.length; i++) {
+      const { x, y } = hexagon.perimeter[i];
+      this.context.lineTo(x, y);
+    }
+    this.context.closePath();
+    this.context.fillStyle = color;
+    this.context.fill();
+  }
+
+  drawBorder(hexagon, color = 'blue') {
+    for (let i = 1; i < hexagon.perimeter.length; i++) {
+      const { x: fromX, y: fromY } = hexagon.perimeter[i - 1];
+      const { x: toX, y: toY } = hexagon.perimeter[i];
+      this.context.moveTo(fromX, fromY);
+      this.context.lineTo(toX, toY);
+      this.context.lineWidth = 2;
+      this.context.strokeStyle = color;
+      this.context.stroke();
+      this.context.closePath();
+    }
+  }
+
+  drawRow() {
+    this.background.hexagons.forEach((hexagon) => {
+      this.fillShape(hexagon, 'grey');
+    });
+    this.map.hexagons.forEach((hexagon) => {
+      this.fillShape(hexagon);
+      this.drawBorder(hexagon);
+    });
+  }
 }
 
 function init() {
-  drawHexagon(100, 100);
+  const canvas = new Canvas('canvas');
+  canvas.drawRow();
 }
 
 init();
