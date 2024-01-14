@@ -4,4 +4,4 @@ Playing with canvas and hexagons
 
 ### Commands:
 
-- `yarn dev` Run the application
+- `yarn run dev` Run the application
